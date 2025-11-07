@@ -4,89 +4,63 @@ vendor_id = 0x4B42
 product_id = 0x6060
 manufacturer = "Custom"
 chip = "nrf52840"
-# Use internal or external oscillator
-# saadc_pin = "p0_04" # Optional: battery monitoring pin
 
 [matrix]
 # Matrix configuration for nRF52840
-rows = 6
-cols = 11
-# Row pins
-row_pins = ["p0_02", "p1_13", "p0_28", "p0_03", "p1_11", "p0_10"]
-# Column pins
-col_pins = ["p0_26", "p0_30", "p0_31", "p0_29", "p0_12", "p0_07", "p0_17", "p0_20", "p0_13", "p0_22", "p0_24"]
+# Note: nRF52 pin format is P0_XX or P1_XX (with underscores)
+input_pins = ["P0_02", "P1_13", "P0_28", "P0_03", "P1_11", "P0_10"]
+output_pins = ["P0_26", "P0_30", "P0_31", "P0_29", "P0_12", "P0_07", "P0_17", "P0_20", "P0_13", "P0_22", "P0_24"]
 
-# Input/Output configuration
-# For COL2ROW: rows are outputs, cols are inputs
-# For ROW2COL: rows are inputs, cols are outputs
-matrix_type = "normal"
-
+# WARNING: Currently row2col/col2row is set in RMK's feature gate
+# row2col config here is valid ONLY when you're using cloud compilation
+# By default, RMK uses col2row (columns are output_pins, rows are input_pins)
+# Uncomment the following line if your matrix is row2col
+# row2col = true
 
 [layout]
-# Physical key layout
-# Format: ["key", "key", {x: gap}, "key"]
-# {w: width} for keys wider than 1u
-# Total keys should match the matrix capacity (6 rows × 11 cols = 66 keys)
-
-[layout.keymap]
-# Layer 0: Default layer
-layer_0 = [
-    # Row 0 (14 keys)
-    ["Esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Minus", "Equal", "Grave"],
-    
-    # Row 1 (14 keys) 
-    ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LeftBracket", "RightBracket", "Delete"],
-    
-    # Row 2 (13 keys)
-    ["CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "Enter"],
-    
-    # Row 3 (14 keys)
-    ["LeftShift", "Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Slash", "RightShift", "Up", "Backslash"],
-    
-    # Row 4 (11 keys)
-    ["LT(1, Fn)", "LeftCtrl", "LeftAlt", "LeftGui", "Space", "Space", "Space", "Space", "RightGui", "Left", "Down"],
-    
-    # Row 5 (placeholder for matrix, adjust based on actual wiring)
-    ["Right", "No", "No", "No", "No", "No", "No", "No", "No", "No", "Backspace"]
-]
-
-# Layer 1: Function layer (activated by Fn key)
-layer_1 = [
-    # Row 0
-    ["Grave", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Delete"],
-    
-    # Row 1
-    ["__", "Mute", "VolumeDown", "VolumeUp", "__", "__", "__", "__", "__", "__", "__", "__", "__", "__"],
-    
-    # Row 2
-    ["__", "MediaPreviousTrack", "MediaPlayPause", "MediaNextTrack", "__", "__", "Left", "Down", "Up", "Right", "__", "__", "__"],
-    
-    # Row 3
-    ["__", "BrightnessDown", "BrightnessUp", "__", "__", "__", "__", "__", "__", "__", "__", "__", "PageUp", "__"],
-    
-    # Row 4
-    ["__", "__", "__", "__", "__", "__", "__", "__", "__", "Home", "PageDown"],
-    
-    # Row 5
-    ["End", "__", "__", "__", "__", "__", "__", "__", "__", "__", "__"]
+rows = 6
+cols = 11
+layers = 2
+keymap = [
+    [
+        # Layer 0: Default layer
+        # Row 0 - Note: each row must have exactly 11 keys (cols)
+        ["Esc", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Kc6", "Kc7", "Kc8", "Kc9", "Kc0"],
+        # Row 1
+        ["Minus", "Equal", "Grave", "Bslash", "Tab", "Q", "W", "E", "R", "T", "Y"],
+        # Row 2
+        ["U", "I", "O", "P", "LBracket", "RBracket", "Delete", "CapsLock", "A", "S", "D"],
+        # Row 3
+        ["F", "G", "H", "J", "K", "L", "Semicolon", "Quote", "Enter", "LShift", "Z"],
+        # Row 4
+        ["X", "C", "V", "B", "N", "M", "Comma", "Dot", "Slash", "RShift", "Up"],
+        # Row 5
+        ["MO(1)", "LCtrl", "LAlt", "LGui", "Space", "RGui", "Left", "Down", "Right", "BSpace", "_"]
+    ],
+    [
+        # Layer 1: Function layer
+        # Row 0
+        ["Grave", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"],
+        # Row 1
+        ["F11", "F12", "Delete", "_", "_", "Mute", "VolDown", "VolUp", "_", "_", "_"],
+        # Row 2
+        ["_", "_", "_", "_", "_", "_", "_", "_", "MediaPrev", "MediaPlay", "MediaNext"],
+        # Row 3
+        ["_", "_", "Left", "Down", "Up", "Right", "_", "_", "_", "_", "BriDown"],
+        # Row 4
+        ["BriUp", "_", "_", "_", "_", "_", "_", "_", "_", "_", "PgUp"],
+        # Row 5
+        ["_", "_", "_", "_", "_", "_", "Home", "PgDown", "End", "_", "_"]
+    ]
 ]
 
 [ble]
-# BLE configuration for nRF52840
 enabled = true
-# Battery monitoring (optional)
-# battery_adc_pin = "p0_04"
 
-[light]
-# LED configuration (optional, if you have indicator LEDs)
-# enabled = false
-# pin = "p0_06"
-# num_leds = 1
+[storage]
+# Enable storage for bonding information
+enabled = true
 
 [behavior]
 # Debounce time in milliseconds
 debounce = 5
-
-[usb]
-# USB configuration
-enabled = true
